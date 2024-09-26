@@ -36,8 +36,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           pip install pytest-playwright
+          pip install allure-pytest
           playwright install  # Встановлюємо браузери Playwright
 
       # Run Playwright tests using Pytest for the specific file 'login_page.py'
       - name: Run tests
-        run: pytest pages/login_page.py
+        run: pytest pages/login_page.py --alluredir=./allure-results
+
+      # (Optional) Upload Allure results for reporting (if using Allure)
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: ./allure-results
