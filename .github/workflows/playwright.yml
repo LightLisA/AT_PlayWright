@@ -29,8 +29,8 @@ jobs:
         run: python -m playwright install --with-deps  # Встановлення браузерів з необхідними залежностями
         
       - name: Run your tests  # Запуск тестів
-        run: pytest -s -v  # Виконання тестів з Pytest в детальному режимі
-        # run: pytest -s -v --alluredir=reports
+        # run: pytest -s -v  # Виконання тестів з Pytest в детальному режимі
+        run: pytest -s -v --alluredir=reports
         # ЗВЕРНІТЬ УВАГУ: якщо у файлі pytest.ini не вказана директорія для збереження звіту Allure або у вас немає файлу конфігуарції pytest.ini, додайте до команди запуску тестів прапор --alluredir=reports.
 
       # Цей крок використовує дію actions/upload-artifact@v4 для завантаження артефактів (у разі звіту Allure) з директорії reports/
