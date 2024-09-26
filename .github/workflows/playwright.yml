@@ -39,3 +39,32 @@ jobs:
         with:
           name: allure_report  # Назва артефакту
           path: reports/  # Шлях до директорії з артефактами
+          
+      ## Назва кроку для отримання історії звітів Allure
+      - name: Get Allure history
+        uses: actions/checkout@v2  # Використання дії для перевірки коду репозиторію
+        if: always()  # Цей крок буде виконується завжди, навіть якщо попередні кроки завершилися невдало.
+        continue-on-error: true  # Продовжити виконання наступних кроків, навіть якщо цей крок завершився невдало.
+        with: # Опції для дії checkout
+          ref: gh-pages  # Вказуємо гілку, з якої потрібно отримати/клонувати код (gh-pages)
+          path: gh-pages  # Визначає, що вміст гілки gh-pages буде клонований до каталогу gh-pages.
+
+      ## Використання дії для генерації звіту Allure із історією.
+      # Використовує GitHub Action для створення звіту Allure. У цьому випадку використовується версія master дії simple-elf/allure-report-action.
+      - uses: simple-elf/allure-report-action@master
+        if: always()  # Цей крок також буде виконано незалежно від результату попередніх кроків
+        id: allure-report  # Унікальний ідентифікатор кроку для подальшого використання
+        with: # Опції для дії allure-report-action
+          allure_results: reports  # Вказує, що результати тестів Allure знаходяться в каталозі reports.
+          gh_pages: gh-pages  # Вказуємо папку, в яку буде завантажено звіт
+          allure_report: allure-report  # Назва для звіту Allure / Визначає каталог для створення нового звіту Allure
+          allure_history: allure-history  # Визначає каталог зберігання історії звітів Allure.
+      
+      ## Публікує звіт Allure на гілку gh-pages / Використання дії для публікації на GitHub Pages
+      # Використовує GitHub Action для публікації вмісту на GitHub Pages. У цьому випадку використовується версія v2 дії peaceiris/actions-gh-pages
+      - uses: peaceiris/actions-gh-pages@v2 
+        if: always()  # Цей крок також буде виконано незалежно від результату попередніх кроків
+        env: # Визначає змінні оточення
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Використовує секретний токен GitHub для автентифікації на GitHub
+          PUBLISH_BRANCH: gh-pages  # Вказує гілку, на яку буде опубліковано контент (у даному випадку gh-pages).
+          PUBLISH_DIR: allure-history  # Вказує каталог, вміст якого буде опубліковано на GitHub Pages (в даному випадку allure-history).
