@@ -41,7 +41,7 @@ jobs:
 
       # Run Playwright tests using Pytest for the specific file 'login_page.py'
       - name: Run tests
-        run: pytest pages/login_page.py --alluredir=./allure-results
+        run: pytest tests/test_login.py --alluredir=./allure-results
 
       # (Optional) Upload Allure results for reporting (if using Allure)
       - name: Upload Allure Results
